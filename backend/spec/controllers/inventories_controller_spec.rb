@@ -94,7 +94,7 @@ RSpec.describe InventoriesController, type: :controller do
     end
     context 'with valid params' do
       it 'creates a new Inventory' do
-        post :create, params: { inventory: attributes }
+        post :create, params: { store_inventory: attributes }
         expect(Inventory.count).to eq prev_count
         expect(response).to have_http_status(:created)
         expect(response.content_type).to include('application/json')
@@ -105,10 +105,27 @@ RSpec.describe InventoriesController, type: :controller do
 
     context 'with invalid params' do
       it 'renders a JSON response with errors for the new inventory' do
-        post :create, params: { inventory: invalid_attributes }
+        post :create, params: { store_inventory: invalid_attributes }
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to include('application/json')
       end
+    end
+
+    context 'with missing params' do
+      it 'renders a JSON response with errors for the new inventory' do
+        post :create, params: { store_inventory: {}}
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.content_type).to include('application/json')
+      end
+    end
+  end
+
+  describe 'permitted params' do
+    it 'permits store_id, shoe_model_id, and inventory' do
+      params = { store_inventory: { store_id: 1, shoe_model_id: 2, inventory: 10 } }
+      should permit(:store_id, :shoe_model_id, :inventory)
+        .for(:create, params: params)
+        .on(:store_inventory)
     end
   end
 
@@ -119,13 +136,13 @@ RSpec.describe InventoriesController, type: :controller do
       end
 
       it 'updates the requested inventory' do
-        put :update, params: { id: inventory.to_param, inventory: new_attributes }
+        put :update, params: { id: inventory.to_param, store_inventory: new_attributes }
         inventory.reload
         expect(inventory.inventory).to eq(75)
       end
 
       it 'renders a JSON response with the inventory' do
-        put :update, params: { id: inventory.to_param, inventory: valid_attributes }
+        put :update, params: { id: inventory.to_param, store_inventory: valid_attributes }
         expect(response).to be_successful
         expect(response.content_type).to include('application/json')
       end
@@ -133,7 +150,14 @@ RSpec.describe InventoriesController, type: :controller do
 
     context 'with invalid params' do
       it 'renders a JSON response with errors for the inventory' do
-        put :update, params: { id: inventory.to_param, inventory: invalid_attributes }
+        put :update, params: { id: inventory.to_param, store_inventory: invalid_attributes }
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.content_type).to include('application/json')
+      end
+    end
+    context 'with missing params' do
+      it 'renders a JSON response with errors for the new inventory' do
+        post :update, params: { id: inventory.to_param, store_inventory: {}}
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to include('application/json')
       end

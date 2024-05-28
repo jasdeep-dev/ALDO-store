@@ -64,12 +64,12 @@ RSpec.describe 'Inventories API', type: :request do
       response '201', 'inventory created' do
         let(:store) { create(:store) }
         let(:shoe_model) { create(:shoe_model) }
-        let(:inventory) { { inventory: { store_id: store.id, shoe_model_id: shoe_model.id, inventory: 50 } } }
+        let(:inventory) { { store_inventory: { store_id: store.id, shoe_model_id: shoe_model.id, inventory: 50 } } }
         run_test!
       end
 
       response '422', 'invalid request' do
-        let(:inventory) { { inventory: { store_id: nil, shoe_model_id: nil, inventory: nil } } }
+        let(:inventory) { { store_inventory: { store_id: nil, shoe_model_id: nil, inventory: nil } } }
         run_test!
       end
     end
@@ -122,13 +122,13 @@ RSpec.describe 'Inventories API', type: :request do
         let(:store) { create(:store) }
         let(:shoe_model) { create(:shoe_model) }
         let(:id) { create(:inventory, store:, shoe_model:).id }
-        let(:inventory) { { inventory: { store_id: store.id, shoe_model_id: shoe_model.id, inventory: 75 } } }
+        let(:inventory) { { store_inventory: { store_id: store.id, shoe_model_id: shoe_model.id, inventory: 75 } } }
         run_test!
       end
 
       response '422', 'invalid request' do
         let(:id) { create(:inventory).id }
-        let(:inventory) { { inventory: { store_id: nil, shoe_model_id: nil, inventory: nil } } }
+        let(:inventory) { { store_inventory: { store_id: nil, shoe_model_id: nil, inventory: nil } } }
         run_test!
       end
     end

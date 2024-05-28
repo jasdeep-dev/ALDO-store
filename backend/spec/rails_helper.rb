@@ -40,6 +40,21 @@ begin
 rescue ActiveRecord::PendingMigrationError => e
   abort e.to_s.strip
 end
+
+# spec/spec_helper.rb or spec/rails_helper.rb
+require 'simplecov'
+SimpleCov.start 'rails' do
+  add_filter '/bin/'
+  add_filter '/db/'
+  add_filter '/spec/'
+  # Add any other filters you want here
+end
+
+# Ensure SimpleCov starts before anything else
+if ENV['COVERAGE']
+  SimpleCov.start 'rails'
+end
+
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_paths = [

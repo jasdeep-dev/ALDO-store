@@ -5,7 +5,6 @@ class InventoriesController < ApplicationController
 
   # GET /inventories
   def index
-    puts "params => #{params}"
     @inventories = Inventory.joins(:store, :shoe_model)
                             .select('inventories.*, stores.name as store_name, shoe_models.name as shoe_model_name')
                             .page(params[:page])
@@ -31,6 +30,8 @@ class InventoriesController < ApplicationController
     else
       render json: @inventory.errors, status: :unprocessable_entity
     end
+  rescue ActionController::ParameterMissing
+    render json: { error: 'Missing required inventory parameters' }, status: :unprocessable_entity
   end
 
   # PATCH/PUT /inventories/1
@@ -40,6 +41,8 @@ class InventoriesController < ApplicationController
     else
       render json: @inventory.errors, status: :unprocessable_entity
     end
+  rescue ActionController::ParameterMissing
+    render json: { error: 'Missing required inventory parameters' }, status: :unprocessable_entity
   end
 
   # DELETE /inventories/1
@@ -57,9 +60,7 @@ class InventoriesController < ApplicationController
   end
 
   def inventory_params
-    params.require(:inventory).permit(:store_id, :shoe_model_id, :inventory)
-  rescue ActionController::ParameterMissing
-    render json: { error: 'Missing required inventory parameters' }, status: :unprocessable_entity
+    params.require(:store_inventory).permit(:store_id, :shoe_model_id, :inventory)
   end
 
   def pagination_meta(object)

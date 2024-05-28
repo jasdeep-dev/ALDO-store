@@ -33,12 +33,14 @@ class WebSocketClientService
       end
 
       EM.add_periodic_timer(@batch_interval) do
-        process_batch unless @updates_batch.empty?
+        unless @updates_batch.empty?
+          process_batch
+        end
       end
     end
   rescue StandardError => e
     puts "Error starting WebSocket client server: #{e.message}"
-    puts e.backtrace.join("\n")
+    puts "ERROR in web_socket_client_service_spec.rb: #{e.backtrace.join("\n")}"
   end
 
   private
