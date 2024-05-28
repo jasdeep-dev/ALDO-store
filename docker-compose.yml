@@ -1,0 +1,89 @@
+version: '3.8'
+services:
+  db:
+    image: mysql:latest
+    volumes:
+      - mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - "3306:3306"
+    networks:
+      - redis_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    command: >
+      bash -c "
+      rm -f tmp/pids/server.pid &&
+      bundle exec rails db:reset && bundle exec rails db:migrate &&
+      bundle exec rails s -e development -p 8000 -b '0.0.0.0'
+      "
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    networks:
+      - redis_network
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      REDIS_URL: redis://redis:6379/1
+      SOCKET_URL: ws://socket:8080/
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    environment:
+      REACT_APP_BACKEND_API: http://localhost:8000
+
+
+  socket:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/app
+    ports:
+      - "8080:8080"
+    networks:
+      - redis_network
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - redis_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  mysql-data:
+  redis_data:
+
+networks:
+  redis_network:
+    driver: bridge
