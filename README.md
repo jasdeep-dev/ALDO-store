@@ -74,6 +74,11 @@ Follow these steps to install and run the app locally using Docker.
 ## API Documentation
 
 The documentation for the API endpoints is available at [http://localhost:8080/api-docs/index.html](http://localhost:8080/api-docs/index.html).
+![](https://github.com/jasdeep-dev/ALDO-store/blob/main/Swagger.png)
+
+## Test Coverage
+
+![](https://github.com/jasdeep-dev/ALDO-store/blob/main/SimpleCov.png)
 
 ## License
 
