@@ -39,7 +39,7 @@ RSpec.describe WebSocketClientService, type: :service do
     end
 
     it 'prints connected message on open event' do
-      EM.run {
+      EM.run do
         ws = instance_double(Faye::WebSocket::Client)
         allow(Faye::WebSocket::Client).to receive(:new).and_return(ws)
 
@@ -51,28 +51,28 @@ RSpec.describe WebSocketClientService, type: :service do
 
         service.start
         EM.stop
-      }
+      end
     end
 
     it 'handles message events' do
-      EM.run {
+      EM.run do
         ws = instance_double(Faye::WebSocket::Client)
         allow(Faye::WebSocket::Client).to receive(:new).and_return(ws)
 
         data = { 'store' => 'Store 1', 'model' => 'Model 1', 'inventory' => 50 }.to_json
         allow(ws).to receive(:on).with(:open)
-        allow(ws).to receive(:on).with(:message).and_yield(double(data: data))
+        allow(ws).to receive(:on).with(:message).and_yield(double(data:))
         allow(ws).to receive(:on).with(:close)
         allow(ws).to receive(:on).with(:error)
         expect(service).to receive(:handle_message).with(data)
 
         service.start
         EM.stop
-      }
+      end
     end
 
     it 'prints close message on close event' do
-      EM.run {
+      EM.run do
         ws = instance_double(Faye::WebSocket::Client)
         allow(Faye::WebSocket::Client).to receive(:new).and_return(ws)
 
@@ -84,11 +84,11 @@ RSpec.describe WebSocketClientService, type: :service do
 
         service.start
         EM.stop
-      }
+      end
     end
 
     it 'prints error message on error event' do
-      EM.run {
+      EM.run do
         ws = instance_double(Faye::WebSocket::Client)
         allow(Faye::WebSocket::Client).to receive(:new).and_return(ws)
 
@@ -100,27 +100,27 @@ RSpec.describe WebSocketClientService, type: :service do
 
         service.start
         EM.stop
-      }
+      end
     end
 
     it 'processes batch periodically' do
-      EM.run {
+      EM.run do
         allow(service).to receive(:process_batch)
 
         # Start the service
         service.start
 
         # Add some data to the updates_batch
-        service.instance_variable_set(:@updates_batch, [{ 'store' => 'Store 1', 'model' => 'Model 1', 'inventory' => 50 }])
+        service.instance_variable_set(:@updates_batch,
+                                      [{ 'store' => 'Store 1', 'model' => 'Model 1', 'inventory' => 50 }])
 
         # Wait for the periodic timer to trigger
-        EM.add_timer(1.5) { # Adjust the timer to ensure it runs after the batch interval
+        EM.add_timer(1.5) do # Adjust the timer to ensure it runs after the batch interval
           expect(service).to have_received(:process_batch).at_least(:once)
           EM.stop
-        }
-      }
+        end
+      end
     end
-
 
     it 'handles StandardError during start' do
       allow(EM).to receive(:run).and_raise(StandardError.new('Test error'))
@@ -152,7 +152,6 @@ RSpec.describe WebSocketClientService, type: :service do
       expect(updates_batch.size).to eq(1)
       expect(updates_batch).to include(parsed_data)
     end
-
 
     it 'handles JSON::ParserError' do
       invalid_data = 'invalid json'

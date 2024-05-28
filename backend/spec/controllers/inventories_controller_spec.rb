@@ -113,7 +113,7 @@ RSpec.describe InventoriesController, type: :controller do
 
     context 'with missing params' do
       it 'renders a JSON response with errors for the new inventory' do
-        post :create, params: { store_inventory: {}}
+        post :create, params: { store_inventory: {} }
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to include('application/json')
       end
@@ -124,7 +124,7 @@ RSpec.describe InventoriesController, type: :controller do
     it 'permits store_id, shoe_model_id, and inventory' do
       params = { store_inventory: { store_id: 1, shoe_model_id: 2, inventory: 10 } }
       should permit(:store_id, :shoe_model_id, :inventory)
-        .for(:create, params: params)
+        .for(:create, params:)
         .on(:store_inventory)
     end
   end
@@ -157,7 +157,7 @@ RSpec.describe InventoriesController, type: :controller do
     end
     context 'with missing params' do
       it 'renders a JSON response with errors for the new inventory' do
-        post :update, params: { id: inventory.to_param, store_inventory: {}}
+        post :update, params: { id: inventory.to_param, store_inventory: {} }
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to include('application/json')
       end

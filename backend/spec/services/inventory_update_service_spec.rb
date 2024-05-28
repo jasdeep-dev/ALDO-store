@@ -44,12 +44,10 @@ RSpec.describe InventoryUpdateService, type: :service do
       it 'logs the error' do
         expect { InventoryUpdateService.new(batch).perform }.to output(/Test error/).to_stdout
       end
-
     end
   end
 
   describe '#bulk_update' do
-
     let(:batch) do
       [
         { 'store' => 'Store 1', 'model' => 'Model 1', 'inventory' => 10 },
@@ -60,12 +58,21 @@ RSpec.describe InventoryUpdateService, type: :service do
 
     before do
       # Stub preload_data method to set instance variables indirectly
-      allow(Store).to receive(:where).with(name: ['Store 1', 'Store 2']).and_return([double(id: 1, name: 'Store 1'), double(id: 2, name: 'Store 2')])
-      allow(ShoeModel).to receive(:where).with(name: ['Model 1', 'Model 2']).and_return([double(id: 1, name: 'Model 1'), double(id: 2, name: 'Model 2')])
-      
+      allow(Store).to receive(:where).with(name: ['Store 1',
+                                                  'Store 2']).and_return([double(id: 1, name: 'Store 1'),
+                                                                          double(id: 2, name: 'Store 2')])
+      allow(ShoeModel).to receive(:where).with(name: ['Model 1',
+                                                      'Model 2']).and_return([double(id: 1, name: 'Model 1'),
+                                                                              double(id: 2, name: 'Model 2')])
+
       # Mock Inventory.find_by to return Inventory objects with appropriate ids
-      allow(Inventory).to receive(:find_by).with(store: an_instance_of(Store), shoe_model: an_instance_of(ShoeModel)).and_return(double(id: 1), double(id: 2))
+      allow(Inventory).to receive(:find_by).with(
+        store: an_instance_of(Store), shoe_model: an_instance_of(ShoeModel)
+      ).and_return(
+        double(id: 1), double(id: 2)
+      )
     end
+
     context 'when updates are successful' do
       it 'updates the inventory and prints a success message' do
         allow(Inventory).to receive(:where).with(id: 1).and_return(double(update_all: true))
@@ -75,9 +82,9 @@ RSpec.describe InventoryUpdateService, type: :service do
         expect(service).to receive(:puts).with('Updated inventory for ID: 2')
 
         service.send(:bulk_update, [
-          { id: 1, inventory: 10, updated_at: Time.current },
-          { id: 2, inventory: 20, updated_at: Time.current }
-        ])
+                       { id: 1, inventory: 10, updated_at: Time.current },
+                       { id: 2, inventory: 20, updated_at: Time.current }
+                     ])
       end
     end
 
@@ -88,20 +95,21 @@ RSpec.describe InventoryUpdateService, type: :service do
         expect(service).to receive(:puts).with('Record not found for ID: 1. Error: not found')
 
         service.send(:bulk_update, [
-          { id: 1, inventory: 10, updated_at: Time.current }
-        ])
+                       { id: 1, inventory: 10, updated_at: Time.current }
+                     ])
       end
     end
 
     context 'when an ActiveRecordError occurs' do
       it 'rescues the error and prints an ActiveRecord error message' do
-        allow(Inventory).to receive(:where).with(id: 1).and_raise(ActiveRecord::ActiveRecordError, 'active record error')
+        allow(Inventory).to receive(:where).with(id: 1).and_raise(ActiveRecord::ActiveRecordError,
+                                                                  'active record error')
 
         expect(service).to receive(:puts).with('ActiveRecord error while updating ID: 1. Error: active record error')
 
         service.send(:bulk_update, [
-          { id: 1, inventory: 10, updated_at: Time.current }
-        ])
+                       { id: 1, inventory: 10, updated_at: Time.current }
+                     ])
       end
     end
 
@@ -112,10 +120,9 @@ RSpec.describe InventoryUpdateService, type: :service do
         expect(service).to receive(:puts).with('General error while updating ID: 1. Error: general error')
 
         service.send(:bulk_update, [
-          { id: 1, inventory: 10, updated_at: Time.current }
-        ])
+                       { id: 1, inventory: 10, updated_at: Time.current }
+                     ])
       end
     end
   end
-
 end

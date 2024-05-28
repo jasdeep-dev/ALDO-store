@@ -51,9 +51,7 @@ SimpleCov.start 'rails' do
 end
 
 # Ensure SimpleCov starts before anything else
-if ENV['COVERAGE']
-  SimpleCov.start 'rails'
-end
+SimpleCov.start 'rails' if ENV['COVERAGE']
 
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
