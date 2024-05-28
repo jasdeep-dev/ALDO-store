@@ -70,7 +70,9 @@ Follow these steps to install and run the app locally using Docker.
 2. You will see the list of inventory items. Use the pagination controls to navigate through pages.
 3. Use the "Items per page" dropdown to change the number of items displayed per page.
 4. On the Left side, You can see the List of Stores and Shoe Models in the drawer.
+## Demo
 
+![](https://github.com/jasdeep-dev/ALDO-store/blob/main/demo.gif)
 ## API Documentation
 
 The documentation for the API endpoints is available at [http://localhost:8080/api-docs/index.html](http://localhost:8080/api-docs/index.html).
