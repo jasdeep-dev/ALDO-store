@@ -1,0 +1,24 @@
+# .rubocop.yml
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  Exclude:
+    - 'db/schema.rb'
+    - 'db/migrate/*'
+    - 'bin/*'
+    - 'node_modules/**/*'
+    - 'vendor/**/*'
+    - 'public/**/*'
+    - 'log/**/*'
+    - 'tmp/**/*'
+    - 'storage/**/*'
+    - 'coverage/**/*'
+    - 'spec/factories/**/*'
+    - 'spec/support/**/*'
+    - 'spec/fixtures/**/*'
+
+Metrics/LineLength:
+  Max: 120
+
+Style/Documentation:
+  Enabled: false

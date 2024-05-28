@@ -1,0 +1,467 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/inventories":
+    get:
+      summary: Retrieves all inventories
+      tags:
+      - Inventories
+      parameters:
+      - name: page
+        in: query
+        schema:
+          type: string
+        description: Page number
+      - name: per_page
+        in: query
+        schema:
+          type: string
+        description: Items per page
+      responses:
+        '200':
+          description: inventories found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  inventories:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        store_id:
+                          type: integer
+                        shoe_model_id:
+                          type: integer
+                        inventory:
+                          type: integer
+                        created_at:
+                          type: string
+                          format: date-time
+                        updated_at:
+                          type: string
+                          format: date-time
+                      required:
+                      - id
+                      - store_id
+                      - shoe_model_id
+                      - inventory
+                      - created_at
+                      - updated_at
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      next_page:
+                        type: integer
+                        nullable: true
+                      prev_page:
+                        type: integer
+                        nullable: true
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                required:
+                - inventories
+                - meta
+    post:
+      summary: Creates an inventory
+      tags:
+      - Inventories
+      parameters: []
+      responses:
+        '201':
+          description: inventory created
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                store_id:
+                  type: integer
+                shoe_model_id:
+                  type: integer
+                inventory:
+                  type: integer
+              required:
+              - store_id
+              - shoe_model_id
+              - inventory
+  "/inventories/{id}":
+    get:
+      summary: Retrieves an inventory
+      tags:
+      - Inventories
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: inventory found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  store_id:
+                    type: integer
+                  shoe_model_id:
+                    type: integer
+                  inventory:
+                    type: integer
+                  created_at:
+                    type: string
+                    format: date-time
+                  updated_at:
+                    type: string
+                    format: date-time
+                required:
+                - id
+                - store_id
+                - shoe_model_id
+                - inventory
+                - created_at
+                - updated_at
+        '404':
+          description: inventory not found
+    put:
+      summary: Updates an inventory
+      tags:
+      - Inventories
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: inventory updated
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                store_id:
+                  type: integer
+                shoe_model_id:
+                  type: integer
+                inventory:
+                  type: integer
+              required:
+              - store_id
+              - shoe_model_id
+              - inventory
+    delete:
+      summary: Deletes an inventory
+      tags:
+      - Inventories
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '204':
+          description: inventory deleted
+  "/shoe_models":
+    get:
+      summary: Retrieves all shoe models
+      tags:
+      - Shoe Models
+      responses:
+        '200':
+          description: shoe models found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    price:
+                      type: number
+                      format: float
+                    created_at:
+                      type: string
+                      format: date-time
+                    updated_at:
+                      type: string
+                      format: date-time
+                  required:
+                  - id
+                  - name
+                  - price
+                  - created_at
+                  - updated_at
+    post:
+      summary: Creates a shoe model
+      tags:
+      - Shoe Models
+      parameters: []
+      responses:
+        '201':
+          description: shoe model created
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                price:
+                  type: number
+                  format: float
+              required:
+              - name
+              - price
+  "/shoe_models/{id}":
+    get:
+      summary: Retrieves a shoe model
+      tags:
+      - Shoe Models
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: shoe model found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  price:
+                    type: number
+                    format: float
+                  created_at:
+                    type: string
+                    format: date-time
+                  updated_at:
+                    type: string
+                    format: date-time
+                required:
+                - id
+                - name
+                - price
+                - created_at
+                - updated_at
+        '404':
+          description: shoe model not found
+    put:
+      summary: Updates a shoe model
+      tags:
+      - Shoe Models
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: shoe model updated
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                price:
+                  type: number
+                  format: float
+              required:
+              - name
+              - price
+    delete:
+      summary: Deletes a shoe model
+      tags:
+      - Shoe Models
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '204':
+          description: shoe model deleted
+  "/stores":
+    get:
+      summary: Retrieves all stores
+      tags:
+      - Stores
+      responses:
+        '200':
+          description: stores found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    address:
+                      type: string
+                      nullable: true
+                    created_at:
+                      type: string
+                      format: date-time
+                    updated_at:
+                      type: string
+                      format: date-time
+                  required:
+                  - id
+                  - name
+                  - created_at
+                  - updated_at
+    post:
+      summary: Creates a store
+      tags:
+      - Stores
+      parameters: []
+      responses:
+        '201':
+          description: store created
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                address:
+                  type: string
+                  nullable: true
+              required:
+              - name
+  "/stores/{id}":
+    get:
+      summary: Retrieves a store
+      tags:
+      - Stores
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: store found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  address:
+                    type: string
+                    nullable: true
+                  created_at:
+                    type: string
+                    format: date-time
+                  updated_at:
+                    type: string
+                    format: date-time
+                required:
+                - id
+                - name
+                - created_at
+                - updated_at
+        '404':
+          description: store not found
+    put:
+      summary: Updates a store
+      tags:
+      - Stores
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: store updated
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                address:
+                  type: string
+                  nullable: true
+              required:
+              - name
+    delete:
+      summary: Deletes a store
+      tags:
+      - Stores
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '204':
+          description: store deleted
+servers:
+- url: http://{defaultHost}
+  variables:
+    defaultHost:
+      default: localhost:8000
